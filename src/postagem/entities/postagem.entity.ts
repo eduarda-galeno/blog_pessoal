@@ -33,5 +33,6 @@ export class Postagem{
         onDelete: "CASCADE" // Quando apagar o tema, apagar as postagens conectadas com esse tema
     })
     tema: Tema
+    usuario: any;
 
 }
