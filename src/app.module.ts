@@ -8,28 +8,25 @@ import { Tema } from './tema/entities/tema.entity';
 import { TemaModule } from './tema/tema.module';
 import { Usuario } from './usuario/entities/usuario.entity';
 import { UsuarioModule } from './usuario/usuario.module';
+import { APP_PIPE } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
+import { ProdService } from './data/service/prod.service';
 
 // O app.module defino todos os recursos que terá na aplicação
 
 // Função especial original do Type, está indicando que é uma classe Module
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'docerosa',
-      database: 'db_blogpessoal', // Nome do banco de dados
-      entities: [Postagem, Tema, Usuario], // Entidades -> Cria tabelas no banco de dados
-      synchronize: true,  // Verifica se teve alteração na module, atualizando caso tenha (deixa tudo sincronizado)
-      logging: true,  // Mostra no console os comandos SQL gerados no Type ORM
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      useClass: ProdService,
+        imports: [ConfigModule],
     }),
     PostagemModule,
     TemaModule,
     UsuarioModule
   ],
-  controllers: [],   // Controladoras 
+  controllers: [AppController],   // Controladoras 
   providers: [],  // Registra as classes de serviço
 })
 export class AppModule {}
